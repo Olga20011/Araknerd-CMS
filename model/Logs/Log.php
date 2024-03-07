@@ -33,7 +33,7 @@ class Log extends App
                 mkdir('log', 0777, true);
             }
             $log = date("Y-m-d H:i:s") . " " . $username . ": " . $description . " via {$url}\n";
-            $fp = fopen('log/access.log', 'a'); //opens file in append mode.
+            $fp = fopen('log/', 'a'); //opens file in append mode.
             fwrite($fp, $log);
             fclose($fp);
         endif;
