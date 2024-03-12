@@ -5,7 +5,7 @@ use model\Products\Product;
 
 require_api_headers();
 $data=json_decode(file_get_contents("php://input"));
-require_api_data($data, []);
+// require_api_data($data, []);
 
 
 $NewRequest=new Product;
