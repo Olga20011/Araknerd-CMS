@@ -20,7 +20,11 @@ switch($request):
              
     case "sup/info":
         include_once "api/supplier/get_supplier_info.php";
-        break;     
+        break; 
+        
+    case "sup/total":
+        include_once "api/supplier/total_suppliers.php";
+        break; 
         
 
         

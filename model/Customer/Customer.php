@@ -22,7 +22,7 @@ class Customer extends App
         endif;
 
         $phone = format_phone_number($phone_number);
-        if(!$phone):
+        if($phone):
             $this->Error ="Phone number should be 10 digits";
             return false;
         endif;
@@ -67,6 +67,20 @@ class Customer extends App
             return false;
         endif;
         return $this->__std_data_format($objCustomer);
+    }
+
+    public function __total_customers(){
+        $query= "SELECT COUNT(*) AS total_customers FROM tbl_customer";
+
+        $result = AppData::__execute($query);
+
+        if($result){
+            $row= $result->fetch_assoc()['total_customers'];
+            
+            return $row;
+        }else{
+            $this->Error="Error occured";
+        }
     }
 
 

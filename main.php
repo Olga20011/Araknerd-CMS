@@ -6,7 +6,7 @@ include_once "include/functions.php";
  $request=get_request_name(getenv('URI_DEPTH'));
 ob_start();  // Start output buffering
 include_once "sys/route_capture.php";
-include_once "strict.php";
+// include_once "strict.php";
 include_once 'App.php'; 
 include_once "sys/route_clock.php";
 $output = ob_get_contents();  // Get the contents of the output buffer

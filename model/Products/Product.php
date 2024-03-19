@@ -76,6 +76,22 @@ class Product extends App
         return $this->__std_data_format($objProduct);
     }
 
+    public function __total_prd(){
+        $query= "SELECT COUNT(*) AS total_products FROM tbl_products ";
+
+        $result= AppData::__execute($query);
+        
+        if ($result){
+            $row= $result->fetch_assoc()['total_products'];
+
+            return $row;
+
+        }else{
+            $this->Error= "Error occured while fetching products";
+        }
+
+    }
+
 
     public function __update_product($id,$prd_name,$prd_category,$buying_price, $selling_price, $supplier,$prd_description ){
 

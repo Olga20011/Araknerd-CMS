@@ -20,7 +20,11 @@ switch($request):
              
     case "customer/info":
         include_once "api/customer/get_customer_info.php";
-        break;      
+        break; 
+
+    case "customer/total":
+        include_once "api/customer/total_customers.php";
+        break;          
          
 endswitch;
 

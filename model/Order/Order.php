@@ -16,7 +16,7 @@ class Order extends App
         $this->__initialize();
     }
 
-    public function __create_order($order_id,$customer_id, $prd_id,$unit_price, $quantity,$date, $status)
+    public function __create_order($customer_id, $prd_id,$unit_price, $quantity,$date, $status)
     {
         if(len($status<0)&& $unit_price<0):
             $this->Error = "Please fill in all product details";

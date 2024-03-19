@@ -68,6 +68,22 @@ class Supplier extends App
         return $this->__std_data_format($objSupplier);
     }
 
+    public function __total_suppliers(){
+        $query= "SELECT COUNT(*) AS total_suppliers FROM tbl_supplier";
+
+        $result= AppData::__execute($query);
+
+        if($result){
+            $row= $result->fetch_assoc()['total_suppliers'];
+            
+            return $row;
+
+        }else{
+            $this->Error="Error occured";
+
+        }
+    }
+
     public function __update_supplier($id,$supplier_name,$phone_number,$email,$location){
 
             if($id<=0 || len($supplier_name)):

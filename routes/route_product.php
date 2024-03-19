@@ -21,6 +21,10 @@ switch($request):
     case "product/info":
         include_once "api/products/get_prd_info.php";
         break; 
+
+    case "product/total":
+        include_once "api/products/total_prd.php";
+        break;     
                          
          
 endswitch;
