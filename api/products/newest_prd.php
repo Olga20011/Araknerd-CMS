@@ -1,7 +1,5 @@
 <?php
-// ini_set('display_errors',1);
-// error_reporting(E_ALL);
-// use model\App;
+
 use model\Products\Product;
 
 require_api_headers();
@@ -11,7 +9,7 @@ require_api_data($data, []);
 
 $NewRequest=new Product;
 // $NewRequest->__set_system_user('oba');
-$result=$NewRequest->__get_prd_list();
+$result=$NewRequest->__newest_prd();
                             
 $info = format_api_return_data($result, $NewRequest);
 

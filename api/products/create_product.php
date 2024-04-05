@@ -5,7 +5,7 @@ use model\Products\Product;
 
 require_api_headers();
 $data=json_decode(file_get_contents("php://input"));
-require_api_data($data, ['prd_name','prd_category','prd_description','supplier','buying_price','selling_price','qty_in', 'qty_out','reorder_point']);
+require_api_data($data, ['prd_name','prd_category','prd_description','supplier','buying_price','selling_price','qty_in', 'qty_out','minimum_stock_value']);
 
 
 $NewRequest=new Product;
@@ -17,7 +17,7 @@ $result=$NewRequest->__create_products(clean($data->prd_name),
                                        clean($data->selling_price),
                                        clean($data->qty_in),
                                        clean($data->qty_out),
-                                       clean($data->reorder_point));
+                                       clean($data->minimum_stock_value));
                             
 $info = format_api_return_data($result, $NewRequest);
 

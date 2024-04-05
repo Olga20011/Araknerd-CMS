@@ -86,7 +86,7 @@ class Supplier extends App
 
     public function __update_supplier($id,$supplier_name,$phone_number,$email,$location){
 
-            if($id<=0 || len($supplier_name)):
+            if($id<0 || len($supplier_name)):
                 $this->Error = "Please fill in all supplier details";
                 return false;
             endif;

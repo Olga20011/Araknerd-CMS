@@ -16,7 +16,7 @@ class Order extends App
         $this->__initialize();
     }
 
-    public function __create_order($customer_id, $prd_id,$unit_price, $quantity,$date, $status)
+    public function __create_order($order_id,$customer_id, $prd_id,$unit_price, $quantity,$date, $status)
     {
         if(len($status<0)&& $unit_price<0):
             $this->Error = "Please fill in all product details";
@@ -142,6 +142,7 @@ class Order extends App
         if (!AppData::__table_exists($this->TableName)) {
             $query = "CREATE TABLE `$this->TableName` (";
             $query .= "`id` INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,";
+            $query .= "`order_id` INT(11) NOT NULL ,";
             $query .= "`customer_id` INT(11) NOT NULL,";
             $query .= "`date` timestamp NOT NULL DEFAULT current_timestamp(),";
             $query .= "`status` VARCHAR(255) NOT NULL,";

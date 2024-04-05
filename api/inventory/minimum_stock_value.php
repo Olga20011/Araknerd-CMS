@@ -5,11 +5,11 @@ use model\Inventory\Inventory;
 
 require_api_headers();
 $data=json_decode(file_get_contents("php://input"));
-require_api_data($data, ['qty_in','reorder_point']);
+require_api_data($data, ['qty_in','minimum_stock_value']);
 
 
 $NewRequest=new Inventory;
-$result=$NewRequest->__re_order_stock(clean($data->reorder_point),
+$result=$NewRequest->__re_order_stock(clean($data->minimum_stock_value),
                                       clean($data->qty_in)); 
                                        
                                       

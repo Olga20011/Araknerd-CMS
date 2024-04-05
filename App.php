@@ -13,6 +13,7 @@ include_once "routes/route_cart.php";
 include_once "routes/route_order.php";
 include_once "routes/route_supplier.php";
 include_once "routes/route_customer.php";
+include_once "routes/route_category.php";
 
 
 ?>

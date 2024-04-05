@@ -24,7 +24,7 @@ class Database {
    * Constructor.
    */
   public function __construct() {
-    (new Environment())->load();//loads from index folder
+    // (new Environment())->load();//loads from index folder
     $this->_connection = new mysqli(
       getenv('DATABASE_HOST'), 
       getenv('DATABASE_USER'), 

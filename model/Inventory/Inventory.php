@@ -15,7 +15,7 @@ class Inventory extends App
         $this->__initialize();
     }
 
-    public function __create_inventory($prd_id, $qty_in, $qty_out, $reorder_point)
+    public function __create_inventory($prd_id, $qty_in, $qty_out, $minimum_stock_value)
     {
         if($prd_id<0 && $qty_in<0):
             $this->Error = "Please fill in all product details";
@@ -26,7 +26,7 @@ class Inventory extends App
             "prd_id"=>$prd_id,
             "qty_in"=>$qty_in,
             "qty_out"=>$qty_out,
-            "reorder_point"=>$reorder_point
+            "minimum_stock_value"=>$minimum_stock_value
         ];
         if ($id = AppData::__create($this->TableName, $data)) :
             $this->Success = "Inventory created successfully!!";
@@ -63,14 +63,14 @@ class Inventory extends App
         return $this->__std_data_format($objInventory);
     }
 
-    public function __re_order_stock($reorder_point, $qty_in){
+    public function __re_order_stock($minimum_stock_value,$qty_in){
       
         $query = "SELECT 
                     prd_id, 
                     qty_in,
-                    reorder_point, 
+                    minimum_stock_value, 
                     CASE 
-                        WHEN qty_in <= reorder_point THEN 'Reorder needed!!!'
+                        WHEN qty_in <= minimum_stock_value THEN 'Reorder needed!!!'
                         ELSE 'No reorder needed'
                     END AS reorder_status
                   FROM tbl_inventory";
@@ -86,10 +86,10 @@ class Inventory extends App
         // Process the results or use them as needed.
         foreach ($list as $row) {
             $productId = $row['prd_id'];
-            $reorderPoint = $row['reorder_point'];
+            $minimum_stock_value = $row['minimum_stock_value'];
         
             // Assuming you want to set some variable based on the reorder status.
-            if ($reorderPoint === 'Reorder needed!!!') {
+            if ($minimum_stock_value === 'Reorder needed!!!') {
                 $this->Success = "Product with ID $productId needs to be reordered!";
             } else {
                 // No reorder needed for this product.
@@ -120,7 +120,7 @@ class Inventory extends App
     }
 
 
-    public function __update_inventory($id, $prd_id, $reorder_point, $qty_in, $qty_out){
+    public function __update_inventory($id, $prd_id, $minimum_stock_value, $qty_in, $qty_out){
 
             if($id<=0 || $qty_in<0 || $qty_out<0):
                 $this->Error = "Please fill in all contact details";
@@ -132,7 +132,7 @@ class Inventory extends App
                 "prd_id"=>$prd_id,
                 "qty_in"=>$qty_in,
                 "qty_out"=>$qty_out,
-                "reorder_point"=>$reorder_point,
+                "minimum_stock_value"=>$minimum_stock_value,
                 
             ];
             if ($id = AppData::__update($this->TableName, $data, $id)) :
@@ -164,7 +164,7 @@ class Inventory extends App
             "prd_id"=>$data->prd_id,
             "qty_in"=>$data->qty_in,
             "qty_out"=>$data->qty_out,
-            "reorder_point"=>$data->reorder_point, 
+            "minimum_stock_value"=>$data->minimum_stock_value, 
         ];
     }
 
@@ -180,7 +180,7 @@ class Inventory extends App
             $query .= "`prd_id` VARCHAR(255) NOT NULL,";
             $query .= " `qty_in` INT(11) NOT NULL,";
             $query .= " `qty_out` INT(11) NOT NULL,";
-            $query .= " `reorder_point` INT(11) NOT NULL,";
+            $query .= " `minimum_stock_value` INT(11) NOT NULL,";
             $query .= " `created_at` timestamp NOT NULL DEFAULT current_timestamp(),";
             $query .= " `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()";
             $query .= ") ENGINE=InnoDB";

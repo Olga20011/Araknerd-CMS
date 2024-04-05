@@ -1,8 +1,13 @@
 <?php
 use model\Auth\Environment;
+use model\Logs\Log;
 include_once "include/autoloader.php";
 include_once "include/functions.php";
 (new Environment('.env'))->load();
+if(!getenv('DATABASE_USER')):
+    (new Log)->__log_custom_file(".env file can't be read", "file_error.log");
+    include_once "api/404.php";
+endif;
  $request=get_request_name(getenv('URI_DEPTH'));
 ob_start();  // Start output buffering
 include_once "sys/route_capture.php";

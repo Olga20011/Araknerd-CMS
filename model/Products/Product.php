@@ -12,13 +12,12 @@ class Product extends App
 
     public function __construct()
     {
-        parent::__construct();
         $this->__initialize();
     }
 
-    public function __create_products($prd_name, $prd_category, $prd_description,$supplier,$buying_price, $selling_price, $qty_in, $qty_out, $reorder_point)
+    public function __create_products($prd_name, $prd_category, $prd_description,$supplier,$buying_price, $selling_price, $qty_in, $qty_out, $minimum_stock_value)
     {
-        if(len($prd_name)&& len($prd_category) && $buying_price<0 && $qty_in<0):
+        if(strlen($prd_name)&& strlen($prd_category) && $buying_price<0 && $qty_in<0):
             $this->Error = "Please fill in all product details";
             return false;
         endif;
@@ -36,7 +35,7 @@ class Product extends App
             $this->Success = "Product created successfully!!";
 
             $NewInventory = new Inventory;
-            if($NewInventory->__create_inventory($prd_id, $qty_in, $qty_out, $reorder_point,)
+            if($NewInventory->__create_inventory($prd_id, $qty_in, $qty_out, $minimum_stock_value,)
             
             ){
                 $this->Success .= $NewInventory->Success;
@@ -46,13 +45,22 @@ class Product extends App
             
             
         endif;
-        $this->Error = "An error occurred while product user";
+        $this->Error = "An error occurred while creating product";
         return false;
 
     }
 
     public function __get_prd_list()
     {
+        // $query = "SELECT * FROM `$this->TableName`";
+        // $result = AppData::__execute($query);
+        // $list = [];
+        // while ($row = $result->fetch_assoc()) {
+        //     $list[] = $this->__std_data_format($row);
+        // }
+        // return $list;
+
+
         if(!$objProduct  = AppData::__get_rows($this->TableName)):
             $this->Error="product  not found";
             return false;
@@ -63,6 +71,20 @@ class Product extends App
         while($row =$objProduct->fetch_assoc()){
             $list [] =$this->__std_data_format($row);
         }
+        return $list;
+    }
+
+    public function __newest_prd(){
+        $query= "SELECT * FROM tbl_products
+        ORDER BY created_at DESC
+        LIMIT 3;
+        ";
+        $result = AppData::__execute($query);
+        $list = [];
+        while ($row = $result->fetch_assoc()){
+            $list[] = $this->__std_data_format($row);
+        }
+
         return $list;
     }
 
@@ -92,11 +114,10 @@ class Product extends App
 
     }
 
-
     public function __update_product($id,$prd_name,$prd_category,$buying_price, $selling_price, $supplier,$prd_description ){
 
-            if($id<=0 || len($prd_name)):
-                $this->Error = "Please fill in all contact details";
+            if($id<0 || len($prd_name)):
+                $this->Error = "Please fill in all product details";
                 return false;
             endif;
 
@@ -130,7 +151,6 @@ class Product extends App
             return false;
     
         }
-    
 
     private function __std_data_format($data){
         $data = (object) $data;

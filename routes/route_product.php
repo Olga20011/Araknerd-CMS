@@ -24,7 +24,11 @@ switch($request):
 
     case "product/total":
         include_once "api/products/total_prd.php";
-        break;     
+        break;  
+        
+    case "product/new":
+        include_once "api/products/newest_prd.php";
+        break;  
                          
          
 endswitch;

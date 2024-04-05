@@ -23,7 +23,7 @@ switch($request):
         break;   
     
     case "inv/order":
-        include_once "api/inventory/re_order_stock.php";
+        include_once "api/inventory/minimum_stock_value.php";
         break; 
         
     case "inv/total":
