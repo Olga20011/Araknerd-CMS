@@ -41,15 +41,12 @@ class User extends Role
                 return $token;
             }
 
-
-            
             $this->Error = "Enter correct username and password";
             return false;
        
     }
 
-
-    private function __create($first_name, $last_name, $username, $password, $role_id)
+    public function __create($first_name, $last_name, $username, $password, $role_id)
     {
         $data=[
             "first_name"=>$first_name,
@@ -67,7 +64,6 @@ class User extends Role
         return md5(sha1($key));
     }
 
-
     private function __update_token($user_id, $token)
     {
         $data = [
@@ -76,8 +72,6 @@ class User extends Role
 
         return AppData::__update($this->TableName, $data, $user_id);
     }
-
-
 
     public function __get_user_token($user_id)
     {
@@ -88,7 +82,6 @@ class User extends Role
 
         return $objUser->token;
     }
-
 
     public function __get_user_info($id)
     {
@@ -105,7 +98,6 @@ class User extends Role
         return $this->UserIsActivated;
     }
 
-
     private function __std_data_format($data){
         $data = (object) $data;
         $this->UserIsActivated = $data->is_active*1==1?true:false;
@@ -117,8 +109,6 @@ class User extends Role
             "role_id"=>$data->role_id
         ];
     }
-
-
     private function __initialize()
     {
         if (!AppData::__table_exists($this->TableName)) {

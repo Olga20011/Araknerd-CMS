@@ -29,6 +29,10 @@ switch($request):
     case "product/new":
         include_once "api/products/newest_prd.php";
         break;  
+
+    case "product/limit":
+        include_once "api/products/table_limit.php";
+        break; 
                          
          
 endswitch;

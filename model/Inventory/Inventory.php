@@ -15,7 +15,7 @@ class Inventory extends App
         $this->__initialize();
     }
 
-    public function __create_inventory($prd_id, $qty_in, $qty_out, $minimum_stock_value)
+    public function __create_inventory($prd_id, $prd_name, $qty_in, $qty_out, $minimum_stock_value)
     {
         if($prd_id<0 && $qty_in<0):
             $this->Error = "Please fill in all product details";
@@ -40,19 +40,35 @@ class Inventory extends App
 
     public function __get_inv_list()
     {
-        if(!$objInventory  = AppData::__get_rows($this->TableName)):
-            $this->Error="Inventory not found";
-            return false;
-        endif;
 
-     $list =[];
-
-        while($row =$objInventory->fetch_assoc() ){
-            $list [] =$this->__std_data_format($row);
+        $this->__total_inventory();
+        if($this->__get_total_records()===0){
+            $this->Error = "No records found";
+        }else{
+            $this->__paginate();
         }
-        return $list;
-    }
 
+        $query = "SELECT * FROM `$this->TableName`";
+        $query .= " ORDER BY created_at DESC";
+        $query .= " LIMIT $this->PageStart, $this->ItemsPerPage";
+
+        $result = AppData::__execute($query);
+
+        $num= $result->num_rows;
+
+        $list_data= $this->__get_pagination_data($num);
+
+        $list =[];
+
+        while($row =$result->fetch_assoc()):
+            $list [] =$this->__std_data_format($row);
+        
+        endwhile;
+
+        $list_data['list'] = $list;
+
+        return $list_data;
+    }
 
     public function __get_inv_info($id)
     {
@@ -61,6 +77,23 @@ class Inventory extends App
             return false;
         endif;
         return $this->__std_data_format($objInventory);
+    }
+
+    public function __total_inventory(){
+        $query= "SELECT COUNT(*) AS total_inventory FROM `$this->TableName`";
+
+        $result = AppData::__execute($query);
+
+        if($result){
+            $row = $result->fetch_assoc()['total_inventory'];
+
+            $this->__set_total_records($row);
+
+            return $row;
+
+        }else{
+            $this->Error= "No Inventory found";
+        }
     }
 
     public function __re_order_stock($minimum_stock_value,$qty_in){
@@ -178,6 +211,7 @@ class Inventory extends App
             $query = "CREATE TABLE `$this->TableName` (";
             $query .= "`id` INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,";
             $query .= "`prd_id` VARCHAR(255) NOT NULL,";
+            $query .= "`prd_name`VARCHAR(255) NOT NULL,";
             $query .= " `qty_in` INT(11) NOT NULL,";
             $query .= " `qty_out` INT(11) NOT NULL,";
             $query .= " `minimum_stock_value` INT(11) NOT NULL,";

@@ -35,7 +35,7 @@ class Product extends App
             $this->Success = "Product created successfully!!";
 
             $NewInventory = new Inventory;
-            if($NewInventory->__create_inventory($prd_id, $qty_in, $qty_out, $minimum_stock_value,)
+            if($NewInventory->__create_inventory($prd_id, $prd_name, $qty_in, $qty_out, $minimum_stock_value,)
             
             ){
                 $this->Success .= $NewInventory->Success;
@@ -52,26 +52,33 @@ class Product extends App
 
     public function __get_prd_list()
     {
-        // $query = "SELECT * FROM `$this->TableName`";
-        // $result = AppData::__execute($query);
-        // $list = [];
-        // while ($row = $result->fetch_assoc()) {
-        //     $list[] = $this->__std_data_format($row);
-        // }
-        // return $list;
 
-
-        if(!$objProduct  = AppData::__get_rows($this->TableName)):
-            $this->Error="product  not found";
-            return false;
-        endif;
-
-     $list =[];
-
-        while($row =$objProduct->fetch_assoc()){
-            $list [] =$this->__std_data_format($row);
+        $this->__total_prd();
+        if($this->__get_total_records() === 0 ){
+            $this->Error = "No products found";
+        }else {
+            $this->__paginate();
         }
-        return $list;
+
+        $query= "SELECT * FROM `$this->TableName`";
+        $query .= " ORDER BY created_at DESC";
+        $query .= " LIMIT $this->PageStart, $this->ItemsPerPage";
+     
+        $result = AppData::__execute($query);
+
+        $num = $result-> num_rows;
+
+        $list_data = $this->__get_pagination_data($num);
+
+        $list =[];
+
+        while($row =$result->fetch_assoc()):
+            $list [] =$this->__std_data_format($row);
+        endwhile;
+        $list_data['list']= $list;
+
+        return $list_data;
+    
     }
 
     public function __newest_prd(){
@@ -106,6 +113,8 @@ class Product extends App
         if ($result){
             $row= $result->fetch_assoc()['total_products'];
 
+            $this->__set_total_records($row);
+
             return $row;
 
         }else{
@@ -139,6 +148,30 @@ class Product extends App
             $this->Error = "An error occurred while updating product";
             return false;
         }
+
+    public function __table_limit(){
+
+        $limit=10;
+
+        $rows= array();
+
+        $query= "SELECT * FROM tbl_products LIMIT $limit";
+
+        $result= AppData::__execute($query);
+
+        while ($row= $result->fetch_assoc()){
+
+            $rows [] = $row;
+
+            if(count($rows) >= $limit){
+                break;
+            }     
+        }
+
+        return $rows;
+
+      
+    }
 
         public function __delete_product($id){
 
@@ -182,7 +215,6 @@ class Product extends App
             $query .= " `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()";
             $query .= ") ENGINE=InnoDB";
             AppData::__execute($query);
-
 
             // create default user
             // $this->__create_products("omo");

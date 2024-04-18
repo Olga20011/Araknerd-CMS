@@ -15,7 +15,7 @@ class App
     public $SystemUser;
     public $IsActive;
     public $SearchLimit = 5;
-    public $ItemsPerPage = 15;
+    public $ItemsPerPage = 10;
     public $PageStart;
     public $PageStop;
     public $CurrentPageNumber = 0;
@@ -249,6 +249,18 @@ class App
     {
         $object->CurrentPageNumber = $this->CurrentPageNumber;
         $object->SystemUser = $this->SystemUser;
+    }
+
+    public function __set_total_records($total){
+        $this->TotalRecords = $total;
+    }
+
+    public function __get_total_records(){
+        return $this->TotalRecords;
+    }
+
+    public function __set_current_page_number($page){
+        $this->CurrentPageNumber = $page;
     }
 
 

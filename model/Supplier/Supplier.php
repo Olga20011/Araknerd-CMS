@@ -46,18 +46,35 @@ class Supplier extends App
 
     public function __get_supplier_list()
     {
-        if(!$objSupplier = AppData::__get_rows($this->TableName)):
-            $this->Error="supplier not found";
-            return false;
-        endif;
 
-     $list =[];
-
-        while($row =$objSupplier->fetch_assoc() ){
-            $list [] =$this->__std_data_format($row);
+        $this->__total_suppliers();
+        if($this->__get_total_records() === 0 ){
+           $this->Error = "No suppliers found";
+        }else{
+            $this->__paginate();
         }
-        return $list;
+        $query = "SELECT * FROM `$this->TableName`";
+        $query .= " ORDER BY created_at DESC";
+        $query .= " LIMIT $this->PageStart, $this->ItemsPerPage";
+
+        $result = AppData::__execute($query);
+        
+        $num= $result->num_rows;
+
+        $list_data = $this->__get_pagination_data($num);
+       
+        $list =[];
+
+        while($row =$result->fetch_assoc()):
+            $list [] =$this->__std_data_format($row);
+        
+        endwhile;
+
+        $list_data['list'] =$list;
+
+        return $list_data;
     }
+    
 
     public function __get_supplier_info($id)
     {
@@ -75,6 +92,8 @@ class Supplier extends App
 
         if($result){
             $row= $result->fetch_assoc()['total_suppliers'];
+
+            $this->__set_total_records($row);
             
             return $row;
 

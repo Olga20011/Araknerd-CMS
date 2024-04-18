@@ -115,6 +115,7 @@ class Role extends App
 
             $this->__create_role("Super-Admin");
             $this->__create_role("Administrator");
+            $this->__create_role("manager");
         
         endif;
     }

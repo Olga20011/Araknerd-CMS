@@ -46,17 +46,33 @@ class Customer extends App
 
     public function __get_customer_list()
     {
-        if(!$objCustomer  = AppData::__get_rows($this->TableName)):
-            $this->Error="Customer not found";
-            return false;
-        endif;
-
-     $list =[];
-
-        while($row =$objCustomer->fetch_assoc() ){
-            $list [] =$this->__std_data_format($row);
+        $this->__total_customers();
+        if($this->__get_total_records()===0){
+            $this->Error= "No customers found";
+        }else{
+            $this->__paginate();
         }
-        return $list;
+
+        $query = "SELECT * FROM `$this->TableName`";
+        $query .= " ORDER BY created_at DESC";
+        $query .= " LIMIT $this->PageStart, $this->ItemsPerPage";
+
+        $result = AppData::__execute($query);
+
+        $num = $result->num_rows;
+
+        $list_data= $this->__get_pagination_data($num);
+        $list =[];
+
+        while($row =$result->fetch_assoc() ):
+            $list [] =$this->__std_data_format($row);
+        
+        endwhile;
+
+        $list_data['list'] = $list;
+
+    
+        return $list_data;
     }
 
 
@@ -76,6 +92,8 @@ class Customer extends App
 
         if($result){
             $row= $result->fetch_assoc()['total_customers'];
+
+            $this->__set_total_records($row);
             
             return $row;
         }else{
@@ -86,7 +104,7 @@ class Customer extends App
 
     public function __update_customer($id ,$name, $email, $phone_number, $location){
 
-            if($id<=0 || len($name<0)):
+            if($id<=0 && len($name<0)):
                 $this->Error = "Please fill in all customer details";
                 return false;
             endif;

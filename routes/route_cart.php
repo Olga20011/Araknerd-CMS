@@ -20,7 +20,14 @@ switch($request):
              
     case "cart/info":
         include_once "api/cart/get_cart_info.php";
-        break;     
+        break; 
+    case "cart/orders":
+        include_once "api/cart/total_orders.php";
+        break; 
+            
+    case "cart/details":
+        include_once "api/cart/cart_details.php";
+        break;        
         
 
         

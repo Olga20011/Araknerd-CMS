@@ -6,10 +6,11 @@ use model\Products\Product;
 
 require_api_headers();
 $data=json_decode(file_get_contents("php://input"));
-require_api_data($data, []);
+require_api_data($data, ['page']);
 
 
 $NewRequest=new Product;
+$NewRequest->__set_current_page_number(clean($data->page));
 // $NewRequest->__set_system_user('oba');
 $result=$NewRequest->__get_prd_list();
                             

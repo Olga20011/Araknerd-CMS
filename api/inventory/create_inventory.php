@@ -5,12 +5,13 @@ use model\Inventory\Inventory;
 
 require_api_headers();
 $data=json_decode(file_get_contents("php://input"));
-require_api_data($data, ['prd_id','minimum_stock_value','qty_in','qty_out']);
+require_api_data($data, ['prd_id', 'prd_name','minimum_stock_value','qty_in','qty_out']);
 
 
 $NewRequest=new Inventory;
 $result=$NewRequest->__create_inventory(
                                        clean($data->prd_id),
+                                       clean($data->prd_name),
                                        clean($data->minimum_stock_value),
                                        clean($data->qty_in),
                                        clean($data->qty_out));
